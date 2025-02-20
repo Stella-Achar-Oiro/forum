@@ -1,0 +1,13 @@
+# Binary
+forum
+real-time-forum
+
+# Database
+*.db
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
