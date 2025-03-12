@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  forum:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./database:/app/database
+      - ./uploads:/app/uploads
+      - ./static:/app/static
+    environment:
+      - PORT=8080
+      - BASE_URL=http://localhost:8080
+      - DB_PATH=/app/database/forum.db
+      - GIPHY_API_KEY=${GIPHY_API_KEY}
+    restart: unless-stopped 
