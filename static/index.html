@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum</title>
+    <base href="/">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        /* Loading styles */
+        .app-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 46, 0.96);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        .logo {
+            color: #e94560;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: #e94560;
+            animation: spin 1s ease-in-out infinite;
+            margin: 20px 0;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        // Debug initialization
+        console.log('Forum App: HTML parsing started');
+    </script>
+</head>
+<body>
+    <!-- Loading indicator -->
+    <div class="app-loading" id="app-loading">
+        <div class="logo">Forum</div>
+        <div class="spinner"></div>
+        <div>Loading Application...</div>
+    </div>
+
+    <!-- App container -->
+    <div id="app"></div>
+    
+    <script>
+        // Debug initialization
+        console.log('Forum App: Inline script execution started');
+        
+        // Add an initialization flag to track app readiness
+        window.appReady = false;
+        
+        // Add a global error handler to catch and display errors
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error('Global error:', message, 'at', source, lineno, colno);
+            const errorDiv = document.createElement('div');
+            errorDiv.style.position = 'fixed';
+            errorDiv.style.top = '10px';
+            errorDiv.style.left = '10px';
+            errorDiv.style.right = '10px';
+            errorDiv.style.backgroundColor = '#ffebee';
+            errorDiv.style.color = '#c62828';
+            errorDiv.style.padding = '10px';
+            errorDiv.style.zIndex = '9999';
+            errorDiv.style.borderRadius = '4px';
+            errorDiv.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+            errorDiv.innerHTML = `<strong>Error:</strong> ${message}<br>
+                                  <small>At: ${source} (${lineno}:${colno})</small>`;
+            document.body.appendChild(errorDiv);
+        };
+        
+        // Function to ensure critical container elements exist
+        function ensureCriticalElements() {
+            console.log('Ensuring critical DOM elements exist');
+            
+            // Ensure app container exists
+            let appElement = document.getElementById('app');
+            if (!appElement) {
+                console.log('Creating app element');
+                appElement = document.createElement('div');
+                appElement.id = 'app';
+                document.body.appendChild(appElement);
+            }
+            
+            // Ensure main container exists
+            let mainContainer = document.getElementById('main-container');
+            if (!mainContainer) {
+                console.log('Creating main-container element');
+                mainContainer = document.createElement('div');
+                mainContainer.id = 'main-container';
+                appElement.appendChild(mainContainer);
+            }
+            
+            // Ensure navbar container exists
+            let navbarContainer = document.getElementById('navbar-container');
+            if (!navbarContainer) {
+                console.log('Creating navbar-container element');
+                navbarContainer = document.createElement('div');
+                navbarContainer.id = 'navbar-container';
+                appElement.insertBefore(navbarContainer, mainContainer);
+            }
+            
+            // Mark app as ready
+            window.appReady = true;
+            console.log('App DOM elements are ready');
+        }
+        
+        // Function to remove the loading indicator
+        function hideLoading() {
+            const loader = document.getElementById('app-loading');
+            if (loader) {
+                loader.style.opacity = '0';
+                loader.style.transition = 'opacity 0.5s';
+                setTimeout(() => {
+                    loader.remove();
+                }, 500);
+            }
+        }
+        
+        // Ensure elements are created as early as possible
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Forum App: DOMContentLoaded event fired');
+            ensureCriticalElements();
+        });
+        
+        // Hide loading after all scripts have loaded or after a timeout
+        window.addEventListener('load', () => {
+            console.log('Forum App: Window load event fired');
+            ensureCriticalElements(); // Ensure elements one more time
+            // Give a small delay to allow the app to initialize
+            setTimeout(hideLoading, 500);
+        });
+        
+        // Fallback timeout to hide loading indicator after 5 seconds
+        setTimeout(hideLoading, 5000);
+        
+        console.log('Forum App: Inline script execution completed');
+    </script>
+    
+    <!-- Load the main index file first to ensure all dependencies are available -->
+    <script type="module" src="/static/js/index.js"></script>
+    
+    <!-- Core - Using ES modules -->
+    <script type="module" src="/static/js/core/Component.js"></script>
+    <script type="module" src="/static/js/core/Router.js"></script>
+    <script type="module" src="/static/js/core/Store.js"></script>
+    <script type="module" src="/static/js/core/ComponentRegistry.js"></script>
+    
+    <!-- Components - Using ES modules -->
+    <script type="module" src="/static/js/components/Auth/LoginComponent.js"></script>
+    <script type="module" src="/static/js/components/Auth/RegisterComponent.js"></script>
+    <script type="module" src="/static/js/components/Auth/AuthGuard.js"></script>
+    <script type="module" src="/static/js/components/Chat/ChatListComponent.js"></script>
+    <script type="module" src="/static/js/components/Chat/ChatComponent.js"></script>
+    <script type="module" src="/static/js/components/Chat/MessageComponent.js"></script>
+    <script type="module" src="/static/js/components/Common/NavbarComponent.js"></script>
+    <script type="module" src="/static/js/components/Posts/PostsComponent.js"></script>
+    <script type="module" src="/static/js/components/Posts/PostDetailComponent.js"></script>
+    <script type="module" src="/static/js/components/Posts/CreatePostComponent.js"></script>
+    
+    <!-- Services - Using ES modules -->
+    <script type="module" src="/static/js/services/AuthService.js"></script>
+    <script type="module" src="/static/js/services/ChatService.js"></script>
+    <script type="module" src="/static/js/services/WebSocketService.js"></script>
+    
+    <!-- Main - Load this last - Using ES modules -->
+    <script type="module" src="/static/js/app.js"></script>
+    
+    <script>
+        // Final initialization check
+        console.log('Forum App: All scripts loaded');
+        document.dispatchEvent(new Event('forum-app-ready'));
+    </script>
+</body>
+</html> 
